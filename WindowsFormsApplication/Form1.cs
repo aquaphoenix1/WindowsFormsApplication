@@ -47,7 +47,8 @@ namespace WindowsFormsApplication
                 currentPicture.DragDrop += CurrentPB_DragDrop;
                 currentPicture.DragOver += CurrentPB_DragOver;
                 currentPicture.DragLeave += CurrentPB_DragLeave;
-                currentPicture.QueryContinueDrag += CurrentPB_QuerryContinueDrag;
+
+                QueryContinueDrag += CurrentPB_QuerryContinueDrag;
 
                 DragAndDropController.SaveCurrentState(panelConnection, currentPicture);
 
@@ -62,7 +63,8 @@ namespace WindowsFormsApplication
         {
             if(e.Action == DragAction.Cancel)
             {
-                var a = 0;
+                QueryContinueDrag -= CurrentPB_QuerryContinueDrag;
+                StopDragAndDrop();
             }
         }
 
@@ -77,6 +79,16 @@ namespace WindowsFormsApplication
             DragAndDropController.Repaint(e.X, e.Y);
         }
 
+        private void StopDragAndDrop()
+        {
+            Controls.Remove(DragAndDropController.StatePictureBox);
+
+            panelConnection.Visible = true;
+            panelConnection.Enabled = true;
+
+            DragAndDropController.ResetPanel();
+        }
+
         private void CurrentPB_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetData(typeof(MenuComputerElement)) is MenuComputerElement elem)
@@ -85,12 +97,7 @@ namespace WindowsFormsApplication
                 panelConnection.Controls.Add(new Computer(50, 50, ImageController.Open("computer.svg") as Image, Element_MouseDown, point.X - 25, point.Y - 25));
             }
 
-            Controls.Remove(DragAndDropController.StatePictureBox);
-
-            panelConnection.Visible = true;
-            panelConnection.Enabled = true;
-
-            DragAndDropController.ResetPanel();
+            StopDragAndDrop();
         }
 
         private void Element_MouseDown(object sender, MouseEventArgs args)

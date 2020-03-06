@@ -60,6 +60,10 @@ namespace WindowsFormsApplication
             {
                 (sender as IElement).OpenSettings();
             }
+            else if(args.Button == MouseButtons.Left && Form.ModifierKeys == Keys.Control)
+            {
+                (sender as IElement).TogglePins();
+            }
             else
             {
                 DragAndDropController.MouseDown(sender);

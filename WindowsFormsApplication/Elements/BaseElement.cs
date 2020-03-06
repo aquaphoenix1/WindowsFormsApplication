@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using WindowsFormsApplication.Elements.MenuElements;
 
 namespace WindowsFormsApplication.Elements
 {
@@ -13,7 +14,38 @@ namespace WindowsFormsApplication.Elements
         public Action<object, MouseEventArgs> OnMouseDownAction { get; private set; }
         private PinPanel pinPanel;
 
-        protected BaseElement(string name, int width, int height, Image picture, Action<object, MouseEventArgs> onMouseDown, int pinCount)
+        internal bool IsVisiblePinsPanel()
+        {
+            return pinPanel.Visible;
+        }
+
+        public void TogglePins()
+        {
+            if (IsVisiblePinsPanel())
+            {
+                HidePins();
+            }
+            else
+            {
+                ShowPins();
+            }
+        }
+
+        internal void ShowPins()
+        {
+            Height += pinPanel.Height;
+            pinPanel.Enabled = true;
+            pinPanel.Visible = true;
+        }
+
+        internal void HidePins()
+        {
+            Height -= pinPanel.Height;
+            pinPanel.Enabled = false;
+            pinPanel.Visible = false;
+        }
+
+        protected BaseElement(string name, int width, int height, Image picture, Action<object, MouseEventArgs> onMouseDown)
         {
             Width = width;
             Height = height;
@@ -24,7 +56,7 @@ namespace WindowsFormsApplication.Elements
                 Width = this.Width,
                 Height = this.Height,
                 BorderStyle = BorderStyle.FixedSingle,
-                Parent = this,
+                Parent = this
             };
 
             Controls.Add(parentPanel);
@@ -56,7 +88,12 @@ namespace WindowsFormsApplication.Elements
 
             MouseDown += (o, mea) => OnMouseDownAction.Invoke(o, mea);
 
-            pinPanel = new PinPanel(pinCount);
+            pinPanel = new PinPanel()
+            {
+                Visible = false,
+                Enabled = false,
+                Location = new Point(0, NameLabel.Location.Y + NameLabel.Height)
+            };
 
             Controls.Add(pinPanel);
         }
@@ -64,6 +101,11 @@ namespace WindowsFormsApplication.Elements
         private void ElementMouseDown(object sender, MouseEventArgs args)
         {
             OnMouseDownAction(this, args);
+        }
+
+        public void AddPin(string name)
+        {
+            pinPanel.AddPin(name);
         }
     }
 }

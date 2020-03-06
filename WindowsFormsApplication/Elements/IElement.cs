@@ -9,10 +9,12 @@ namespace WindowsFormsApplication.Elements
 {
     interface IElement
     {
+        List<Pin> Pins { get; }  
         string ElementName { get; }
         void OpenSettings();
 
         void SetLocation(int x, int y);
         void ChangeName(string text);
+        void TogglePins();
     }
 }

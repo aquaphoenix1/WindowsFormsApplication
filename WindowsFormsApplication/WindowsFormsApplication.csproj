@@ -71,9 +71,18 @@
     <Compile Include="Elements\MenuElements\MenuRouterElement.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Elements\MenuElements\PinPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Elements\MenuElements\PinPanel.Designer.cs">
+      <DependentUpon>PinPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Elements\Pin.cs" />
-    <Compile Include="Elements\PinPanel.cs">
-      <SubType>Component</SubType>
+    <Compile Include="Elements\PinControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Elements\PinControl.Designer.cs">
+      <DependentUpon>PinControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Elements\Router.cs">
       <SubType>Component</SubType>
@@ -93,6 +102,9 @@
     <Compile Include="ImageController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Elements\PinControl.resx">
+      <DependentUpon>PinControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

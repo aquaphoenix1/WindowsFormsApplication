@@ -7,25 +7,14 @@ using System.Web.UI.WebControls;
 
 namespace WindowsFormsApplication.Elements
 {
-    public class Pin : Panel
+    public class Pin
     {
         private string name;
-
-        private Label NameLabel;
+        private Pin connectedPin;
 
         public Pin(int number)
         {
             name = string.Format("Pin {0}", number);
-
-            NameLabel = new Label()
-            {
-                Width = this.Width,
-                Height = 40
-            };
-
-            NameLabel.Text = name;
-
-            Controls.Add(NameLabel);
         }
     }
 }

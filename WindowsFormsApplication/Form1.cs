@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using WindowsFormsApplication.Elements;
 using WindowsFormsApplication.Elements.MenuElements;
-using Svg;
 
 namespace WindowsFormsApplication
 {
@@ -24,85 +22,48 @@ namespace WindowsFormsApplication
             var width = parent.Width;
             var height = 150;
 
-            menuElements = (new IMenuElement[] { new MenuComputerElement("Компьютер", width, height, ImageController.Open("computer.svg") as Image, ButtonPK_MouseDown) }).ToList();
+            menuElements = (new IMenuElement[] {
+                new MenuComputerElement("Компьютер", width, height, ImageController.Open("computer.svg") as Image, ButtonPK_MouseDown),
+                new MenuRouterElement("Роутер", width, height, ImageController.Open("router.svg") as Image, ButtonPK_MouseDown),
+            }).ToList();
 
             DragAndDropController.FormMain = this;
         }
 
-        private void PanelConnection_DragEnter(object sender, DragEventArgs e)
+        internal void CreateSettingsWindow(IElement element)
         {
-            var elem = e.Data.GetData(typeof(MenuComputerElement)) as MenuComputerElement;
-            if (elem != null)
-            {
-                e.Effect = DragDropEffects.Move;
-
-                PictureBox currentPicture = new PictureBox()
-                {
-                    Width = panelConnection.Width,
-                    Height = panelConnection.Height,
-                    Location = panelConnection.Location
-                };
-
-                currentPicture.AllowDrop = true;
-                currentPicture.DragDrop += CurrentPB_DragDrop;
-                currentPicture.DragOver += CurrentPB_DragOver;
-                currentPicture.DragLeave += CurrentPB_DragLeave;
-
-                QueryContinueDrag += CurrentPB_QuerryContinueDrag;
-
-                DragAndDropController.SaveCurrentState(panelConnection, currentPicture);
-
-                Controls.Add(currentPicture);
-
-                panelConnection.Visible = false;
-                panelConnection.Enabled = false;
-            }
+            new FormSettings(element).ShowDialog();
         }
 
-        private void CurrentPB_QuerryContinueDrag(object sender, QueryContinueDragEventArgs e)
+        private void QuerryContinueDrag(object sender, QueryContinueDragEventArgs e)
         {
             if(e.Action == DragAction.Cancel)
             {
-                QueryContinueDrag -= CurrentPB_QuerryContinueDrag;
+                QueryContinueDrag -= QuerryContinueDrag;
                 StopDragAndDrop();
             }
         }
 
-        private void CurrentPB_DragLeave(object sender, EventArgs e)
+        internal Control GetPanel()
         {
-        }
-
-        private void CurrentPB_DragOver(object sender, DragEventArgs e)
-        {
-            e.Effect = DragDropEffects.All;
-            
-            DragAndDropController.Repaint(e.X, e.Y);
+            return panelScrollMain;
         }
 
         private void StopDragAndDrop()
         {
-            Controls.Remove(DragAndDropController.StatePictureBox);
-
-            panelConnection.Visible = true;
-            panelConnection.Enabled = true;
-
             DragAndDropController.ResetPanel();
-        }
-
-        private void CurrentPB_DragDrop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetData(typeof(MenuComputerElement)) is MenuComputerElement elem)
-            {
-                var point = DragAndDropController.ConvertPoint(e.X, e.Y);
-                panelConnection.Controls.Add(new Computer(50, 50, ImageController.Open("computer.svg") as Image, Element_MouseDown, point.X - 25, point.Y - 25));
-            }
-
-            StopDragAndDrop();
         }
 
         private void Element_MouseDown(object sender, MouseEventArgs args)
         {
-            var a = 0;
+            if(args.Button == MouseButtons.Right)
+            {
+                (sender as IElement).OpenSettings();
+            }
+            else
+            {
+                DragAndDropController.MouseDown(sender);
+            }
         }
 
         private void ButtonPK_MouseDown(object sender, MouseEventArgs e)
@@ -113,6 +74,49 @@ namespace WindowsFormsApplication
         private void FormMain_Load(object sender, EventArgs e)
         {
             menuElements.ForEach(x => panelElements.Controls.Add(x as Control));
+        }
+
+        private void panelConnection_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetData(typeof(MenuComputerElement)) is MenuComputerElement)
+            {
+                var point = DragAndDropController.ConvertPoint(e.X, e.Y);
+                panelConnection.Controls.Add(new Computer(50, 50, ImageController.Open("computer.svg") as Image, Element_MouseDown, point.X - 25, point.Y - 25, 1));
+            }
+            else if (e.Data.GetData(typeof(MenuRouterElement)) is MenuRouterElement)
+            {
+                var point = DragAndDropController.ConvertPoint(e.X, e.Y);
+                panelConnection.Controls.Add(new Router(50, 50, ImageController.Open("router.svg") as Image, Element_MouseDown, point.X - 25, point.Y - 25, 8));
+            }
+            else if (e.Data.GetData(typeof(Computer)) is Computer)
+            {
+                var point = DragAndDropController.ConvertPoint(e.X - DragAndDropController.DraggedObject.Width / 2, e.Y - DragAndDropController.DraggedObject.Height / 2);
+
+                DragAndDropController.DraggedObject.Location = point;
+            }
+
+            StopDragAndDrop();
+        }
+
+        private void panelConnection_DragEnter(object sender, DragEventArgs e)
+        {
+            var elem = e.Data.GetData(typeof(MenuComputerElement)) as MenuComputerElement;
+            if (elem != null)
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+
+            var elem1 = e.Data.GetData(typeof(MenuRouterElement)) as MenuRouterElement;
+            if (elem1 != null)
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+
+            var element = e.Data.GetData(typeof(Computer)) as Computer;
+            if (element != null)
+            {
+                e.Effect = DragDropEffects.Move;
+            }
         }
     }
 }

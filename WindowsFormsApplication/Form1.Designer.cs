@@ -28,21 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panelConnection = new System.Windows.Forms.Panel();
             this.panelElements = new System.Windows.Forms.FlowLayoutPanel();
+            this.panelScrollMain = new System.Windows.Forms.Panel();
+            this.panelConnection = new System.Windows.Forms.Panel();
+            this.panelScrollMain.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // panelConnection
-            // 
-            this.panelConnection.AllowDrop = true;
-            this.panelConnection.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelConnection.Location = new System.Drawing.Point(12, 12);
-            this.panelConnection.Name = "panelConnection";
-            this.panelConnection.Size = new System.Drawing.Size(824, 426);
-            this.panelConnection.TabIndex = 0;
-            this.panelConnection.DragEnter += new System.Windows.Forms.DragEventHandler(this.PanelConnection_DragEnter);
             // 
             // panelElements
             // 
@@ -54,24 +44,48 @@
             this.panelElements.Size = new System.Drawing.Size(92, 426);
             this.panelElements.TabIndex = 0;
             // 
+            // panelScrollMain
+            // 
+            this.panelScrollMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelScrollMain.AutoScroll = true;
+            this.panelScrollMain.Controls.Add(this.panelConnection);
+            this.panelScrollMain.Location = new System.Drawing.Point(13, 12);
+            this.panelScrollMain.Name = "panelScrollMain";
+            this.panelScrollMain.Size = new System.Drawing.Size(823, 426);
+            this.panelScrollMain.TabIndex = 1;
+            // 
+            // panelConnection
+            // 
+            this.panelConnection.AllowDrop = true;
+            this.panelConnection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.panelConnection.Location = new System.Drawing.Point(3, 3);
+            this.panelConnection.Name = "panelConnection";
+            this.panelConnection.Size = new System.Drawing.Size(5000, 5000);
+            this.panelConnection.TabIndex = 3;
+            this.panelConnection.DragDrop += new System.Windows.Forms.DragEventHandler(this.panelConnection_DragDrop);
+            this.panelConnection.DragEnter += new System.Windows.Forms.DragEventHandler(this.panelConnection_DragEnter);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(944, 450);
+            this.Controls.Add(this.panelScrollMain);
             this.Controls.Add(this.panelElements);
-            this.Controls.Add(this.panelConnection);
             this.Name = "FormMain";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.FormMain_Load);
+            this.panelScrollMain.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel panelConnection;
         private System.Windows.Forms.FlowLayoutPanel panelElements;
+        private System.Windows.Forms.Panel panelScrollMain;
+        private System.Windows.Forms.Panel panelConnection;
     }
 }
 

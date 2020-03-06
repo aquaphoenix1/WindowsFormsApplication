@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApplication.Elements
 {
-    class Computer : BaseElement, IElement
+    class Router : BaseElement, IElement
     {
-        public Computer(int width, int height, Image picture, Action<object, MouseEventArgs> onMouseDown, int x, int y, int pinCount, string name = "Безымянный") : base(name, width, height, picture, onMouseDown, pinCount)
+        public Router(int width, int height, Image picture, Action<object, MouseEventArgs> onMouseDown, int x, int y, int pinCount, string name = "Безымянный") : base(name, width, height, picture, onMouseDown, pinCount)
         {
             ElementName = name;
 

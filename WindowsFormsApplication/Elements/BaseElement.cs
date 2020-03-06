@@ -11,8 +11,9 @@ namespace WindowsFormsApplication.Elements
         public Label NameLabel { get; private set; }
         public PictureBox ElementPictureBox { get; private set; }
         public Action<object, MouseEventArgs> OnMouseDownAction { get; private set; }
+        private PinPanel pinPanel;
 
-        protected BaseElement(string name, int width, int height, Image picture, Action<object, MouseEventArgs> onMouseDown)
+        protected BaseElement(string name, int width, int height, Image picture, Action<object, MouseEventArgs> onMouseDown, int pinCount)
         {
             Width = width;
             Height = height;
@@ -42,7 +43,8 @@ namespace WindowsFormsApplication.Elements
             {
                 Width = this.Width,
                 Height = this.Height - NameLabel.Height,
-                Image = picture
+                Image = picture,
+                SizeMode = PictureBoxSizeMode.StretchImage
             };
 
             ElementPictureBox.MouseDown += ElementMouseDown;
@@ -53,6 +55,10 @@ namespace WindowsFormsApplication.Elements
             this.OnMouseDownAction = onMouseDown;
 
             MouseDown += (o, mea) => OnMouseDownAction.Invoke(o, mea);
+
+            pinPanel = new PinPanel(pinCount);
+
+            Controls.Add(pinPanel);
         }
 
         private void ElementMouseDown(object sender, MouseEventArgs args)
